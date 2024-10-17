@@ -29,7 +29,6 @@ makedepends=(
   gd
   git
   python
-  systemd
 )
 optdepends=('gd: CGI support')
 provides=(network-ups-tools)
@@ -92,7 +91,6 @@ build() {
     --with-htmlpath=/usr/share/nut/html \
     --with-pidpath=/run/nut \
     --with-statepath=/var/lib/nut \
-    --with-systemdsystemunitdir=/usr/lib/systemd/system \
     --with-udev-dir=/usr/lib/udev \
     --with-cgi \
     --with-dev \
