@@ -10,7 +10,6 @@ pkgbase = nut
 	makedepends = gd
 	makedepends = git
 	makedepends = python
-	makedepends = systemd
 	depends = gcc-libs
 	depends = glibc
 	depends = libtool
