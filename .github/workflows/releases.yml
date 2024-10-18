@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check permissions of GITHUB_WORKSPACE
-        run: ls -la ..
+        run: |
+          whoami
+          ls -la ..
 
       - name: Update build system
         run: pacman -Syu
