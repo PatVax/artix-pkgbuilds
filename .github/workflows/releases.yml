@@ -17,6 +17,7 @@ jobs:
 
       - name: Check permissions of GITHUB_WORKSPACE
         run: |
+          cat /etc/passwd
           whoami
           ls -la ..
 
