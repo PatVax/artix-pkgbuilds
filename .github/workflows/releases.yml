@@ -1,4 +1,5 @@
 name: Release
+run-name: Release ${{ github.ref_name }}
 
 on:
   push:
@@ -14,8 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run a one-line script
-        run: |
-          echo $(pwd)
-          echo $GITHUB_WORKSPACE
-          echo $(ls)
+      - name: Check permissions of GITHUB_WORKSPACE
+        run: ls -la ${{ github.workspace }}
+
+      - name: Update build system
+        run: pacman -Syu
+
+      - name: Install artools-pkg
+        run: pacman -Sy artools-pkg sudo
+
+      - name: Build the package
+        run: makepkg -Cs
