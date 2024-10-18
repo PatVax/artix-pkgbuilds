@@ -18,3 +18,4 @@ jobs:
         run: |
           echo $(pwd)
           echo $GITHUB_WORKSPACE
+          echo $(ls)
