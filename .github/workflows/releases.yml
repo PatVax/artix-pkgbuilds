@@ -1,0 +1,20 @@
+name: Release
+
+on:
+  push:
+    tags: 
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    container: artixlinux/artixlinux:base-devel
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a one-line script
+        run: |
+          echo $(pwd)
+          echo $GITHUB_WORKSPACE
