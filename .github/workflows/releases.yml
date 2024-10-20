@@ -39,4 +39,4 @@ jobs:
         run: pacman -S github-cli --noconfirm
 
       - name: Create the release
-        run: sudo -E -u nobody gh release create --generate-notes --verify-tag -t Release -n ${{ github.ref_name }} ${{ github.ref_name }} *.pkg.tar.zst
+        run: sudo -E -u nobody gh release create --generate-notes --verify-tag -t "Release ${{ github.ref_name }}" ${{ github.ref_name }} *.pkg.tar.zst
