@@ -10,7 +10,9 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    container: artixlinux/artixlinux:base-devel
+    container: 
+      image: artixlinux/artixlinux:base-devel
+      options: --privileged
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
