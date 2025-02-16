@@ -17,6 +17,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_SECRET: ${{ secrets.GPG_SECRET }}
+      BUILD_USER: "builder"
     permissions:
       contents: write
 
@@ -27,17 +28,20 @@ jobs:
       - name: Install general build dependencies
         run: pacman -S git artools-pkg --noconfirm
 
-      - name: "Allow the \"nobody\" user to run commands as root"
-        run: "echo \"nobody ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"
+      - name: Create build user
+        run: useradd -M $BUILD_USER
+
+      - name: "Allow the \"$BUILD_USER\" user to run commands as root"
+        run: "echo \"$BUILD_USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"
     
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: "Add permissions to current directory for the \"nobody\" user"
-        run: chown -R nobody:nobody .
+      - name: "Add permissions to current directory for the \"$BUILD_USER\" user"
+        run: chown -R $BUILD_USER:$BUILD_USER .
 
       - name: Build the package
-        run: sudo -u nobody makepkg -s --noconfirm
+        run: sudo -u $BUILD_USER makepkg -s --noconfirm
 
       - name: Import GPG key from secrets with passphrase
         run: echo "$GPG_SECRET" | gpg --batch --yes --import
@@ -49,4 +53,4 @@ jobs:
         run: pacman -S github-cli --noconfirm
 
       - name: Create the release
-        run: sudo -E -u nobody gh release create --generate-notes --verify-tag -t "Release ${{ github.ref_name }}" ${{ github.ref_name }} *.pkg.tar.zst*
+        run: sudo -E -u $BUILD_USER gh release create --generate-notes --verify-tag -t "Release ${{ github.ref_name }}" ${{ github.ref_name }} *.pkg.tar.zst*
