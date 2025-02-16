@@ -15,6 +15,8 @@ jobs:
       options: --privileged
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      GPG_SECRET: ${{ secrets.GPG_SECRET }}
     permissions:
       contents: write
 
@@ -37,8 +39,14 @@ jobs:
       - name: Build the package
         run: sudo -u nobody makepkg -s --noconfirm
 
+      - name: Import GPG key from secrets with passphrase
+        run: echo "$GPG_SECRET" | gpg --batch --yes --import
+      
+      - name: Sign the package
+        run: echo "$GPG_PASSPHRASE" | gpg --batch --yes --detach-sign --passphrase-fd 0 --pinentry-mode=loopback -u 'PatVax-artx-pkgbuilds <patvax0x0@gmail.com>' *.pkg.tar.zst
+
       - name: Install github cli
         run: pacman -S github-cli --noconfirm
 
       - name: Create the release
-        run: sudo -E -u nobody gh release create --generate-notes --verify-tag -t "Release ${{ github.ref_name }}" ${{ github.ref_name }} *.pkg.tar.zst
+        run: sudo -E -u nobody gh release create --generate-notes --verify-tag -t "Release ${{ github.ref_name }}" ${{ github.ref_name }} *.pkg.tar.zst*
